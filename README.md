@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vincetse/google-appengine-getting-started-java-servlet.svg?branch=master)](https://travis-ci.org/vincetse/google-appengine-getting-started-java-servlet)
+
 # Servlet based Hello World app for App Engine Flexible environment
 
 ## Requirements
