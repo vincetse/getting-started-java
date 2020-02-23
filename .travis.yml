@@ -6,10 +6,11 @@ jdk:
 env:
   KEYFILE=forever-project-b4434ecd4b50.json
   PROJECT_NAME=forever-project
+  VERSION=${TRAVIS_COMMIT:0:7}-$TRAVIS_BUILD_NUMBER
 
 script:
-- mvn -q test -B
-- mvn -q package
+- mvn --quiet test -B
+- mvn --quiet package
 
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_35ead60980fb_key -iv $encrypted_35ead60980fb_iv -in forever-project-b4434ecd4b50.json.enc -out $KEYFILE -d
@@ -17,8 +18,23 @@ before_deploy:
 
 deploy:
 - provider: script
-  script: mvn appengine:deploy -Dapp.deploy.projectId=$PROJECT_NAME &&
+  script: mvn --batch-mode appengine:deploy
+            -Dapp.deploy.projectId=$PROJECT_NAME
+            -Dapp.deploy.promote=True
+            -Dapp.deploy.version=prod-$VERSION
+          &&
+          gcloud app describe --project=$PROJECT_NAME
+  skip_cleanup: true
+  on: master
+
+- provider: script
+  script: mvn --batch-mode appengine:deploy
+            -Dapp.deploy.projectId=$PROJECT_NAME
+            -Dapp.deploy.promote=False
+            -Dapp.deploy.version=beta-$VERSION
+          &&
           gcloud app describe --project=$PROJECT_NAME
   skip_cleanup: true
   on:
     all_branches: true
+    condition: $TRAVIS_BRANCH != "master"
