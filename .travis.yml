@@ -6,6 +6,7 @@ jdk:
 env:
   KEYFILE=forever-project-b4434ecd4b50.json
   PROJECT_NAME=forever-project
+  VERSION=${TRAVIS_COMMIT:0:7}-TRAVIS_BUILD_NUMBER
 
 script:
 - mvn --quiet test -B
@@ -20,7 +21,7 @@ deploy:
   script: mvn --batch-mode appengine:deploy
             -Dapp.deploy.projectId=$PROJECT_NAME
             -Dapp.deploy.promote=True
-            -Dapp.deploy.version=prod-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER
+            -Dapp.deploy.version=prod-$VERSION
           &&
           gcloud app describe --project=$PROJECT_NAME
   skip_cleanup: true
@@ -30,7 +31,7 @@ deploy:
   script: mvn --batch-mode appengine:deploy
             -Dapp.deploy.projectId=$PROJECT_NAME
             -Dapp.deploy.promote=False
-            -Dapp.deploy.version=beta-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER
+            -Dapp.deploy.version=beta-$VERSION
           &&
           gcloud app describe --project=$PROJECT_NAME
   skip_cleanup: true
