@@ -8,8 +8,8 @@ env:
   PROJECT_NAME=forever-project
 
 script:
-- mvn --batch-mode test -B
-- mvn --batch-mode package
+- mvn --quiet test -B
+- mvn --quiet package
 
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_35ead60980fb_key -iv $encrypted_35ead60980fb_iv -in forever-project-b4434ecd4b50.json.enc -out $KEYFILE -d
